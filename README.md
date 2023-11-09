@@ -1,6 +1,6 @@
-# minitoets-puppeteer
+# learnbeat-puppeteer
 
-Learnbeat 'minitoets' speedrun bot 🇳🇱
+Learnbeat speedrun bot 🇳🇱
 
 ## Wat doet deze Puppeteer bot?
 

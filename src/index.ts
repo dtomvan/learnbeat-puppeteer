@@ -47,7 +47,7 @@ void (async () => {
     }
 
     await waitForPage(page, url => url.includes("https://inloggen.learnbeat.nl/users/home"));
-    page.evaluate("alert(\"Inloggen geslaagd, ga nu naar de minitoets die je wilt speedrunnen.\");");
+    page.evaluate("alert(\"Inloggen geslaagd, ga nu naar de woordenlijst die je wilt speedrunnen.\");");
 
     await waitForPage(page, url => url.startsWith("https://inloggen.learnbeat.nl/activities/show/"));
     await page.waitForSelector(".js-list-body");
