@@ -85,9 +85,9 @@ void (async () => {
     }
     await wait(1000);
     await page.evaluate("alert(\"Speedrunnen klaar, screenshotten...\");");
-    
+
     const screenshotDir = config?.screenshotDirectory ?? "screenshots";
-    await mkdir(screenshotDir);
+    await mkdir(screenshotDir, { recursive: true });
     await page.screenshot({
         path: `${screenshotDir}/${Date.now()}.png`,
         type: "png"
