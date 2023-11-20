@@ -4,6 +4,7 @@ import stealthPlugin from "puppeteer-extra-plugin-stealth";
 import { getConfig } from "./config";
 import { DISABLE_TIMEOUT } from "./constants";
 import { validatePairs } from "./validators";
+import { mkdir } from "fs/promises";
 
 void (async () => {
     const config = await getConfig().catch(() => null);
@@ -84,8 +85,11 @@ void (async () => {
     }
     await wait(1000);
     await page.evaluate("alert(\"Speedrunnen klaar, screenshotten...\");");
+    
+    const screenshotDir = config?.screenshotDirectory ?? "screenshots";
+    await mkdir(screenshotDir);
     await page.screenshot({
-        path: `screenshots/${Date.now()}.png`,
+        path: `${screenshotDir}/${Date.now()}.png`,
         type: "png"
     });
     await Promise.all((await browser.pages()).map(p => p.close()));

@@ -16,6 +16,7 @@ De bot is te configureren via `config.json`. Het schema van dit bestand spreekt 
 - **password**: het wachtwoord van je account
 - **shouldCheckHeadless** (optioneel, default = `false`): geeft aan of er moet gecheckt moet worden of het herkenbaar is dat Chrome in headless modus is
 - **failChance** (optioneel, default = `0.4`): kans dat de bot het verkeerde (`...`) antwoord geeft, zodat het geloofwaardig lijkt in de screenshot.
+- **screenshotDirectory** (optioneel, default = `screenshots`): de map waarin de screenshots terecht komen.
 
 ## Licentie
 

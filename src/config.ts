@@ -6,7 +6,8 @@ export const configValidator = z.object({
     username: z.string().min(1),
     password: z.string(),
     shouldCheckHeadless: z.boolean().optional().default(false),
-    failChance: z.number().min(0).max(1).optional().default(0.4)
+    failChance: z.number().min(0).max(1).optional().default(0.4),
+    screenshotDirectory: z.string().min(1).optional().default("screenshots")
 });
 
 export type Config = z.infer<typeof configValidator>
