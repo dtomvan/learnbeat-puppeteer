@@ -87,9 +87,10 @@ void (async () => {
     await page.evaluate("alert(\"Speedrunnen klaar, screenshotten...\");");
 
     const screenshotDir = config?.screenshotDirectory ?? "screenshots";
+    const screenshotName = new Date().toISOString().replace(/[^a-z0-9]/gi, '_');
     await mkdir(screenshotDir, { recursive: true });
     await page.screenshot({
-        path: `${screenshotDir}/${Date.now()}.png`,
+        path: `${screenshotDir}/${screenshotName}.png`,
         type: "png"
     });
     await Promise.all((await browser.pages()).map(p => p.close()));
