@@ -75,7 +75,7 @@ void (async () => {
             }
             await page.click(".js-answer");
             await page.type(".js-answer > div > div > div > input", answer, { delay: 50 });
-            if (page.$(".js-training-progress") == null || page.$(".js-next-button") == null) break;
+            if (!(await page.$(".js-training-progress")) || !(await page.$(".js-next-button"))) break;
             await page.click(".js-next-button");
             await page.keyboard.press("Enter");
         }
