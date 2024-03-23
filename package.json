@@ -9,6 +9,7 @@
         "start": "node src/build.mjs && node dist/index.js"
     },
     "dependencies": {
+        "ip": "^2.0.1",
         "puppeteer": "^22.5.0",
         "puppeteer-extra": "^3.3.6",
         "puppeteer-extra-plugin-stealth": "^2.11.2",
