@@ -8,7 +8,7 @@ import { mkdir } from "fs/promises";
 
 void (async () => {
     const config = await getConfig().catch(() => null);
-    await puppeteer.use(stealthPlugin());
+    puppeteer.use(stealthPlugin());
 
     const browser = await puppeteer.launch({
         defaultViewport: null,
@@ -63,16 +63,19 @@ void (async () => {
     const speedrunMatcher = /https:\/\/inloggen\.learnbeat\.nl\/activities\/show\/(\d)*\/sessions\/(\d)*/;
     await waitForPage(page, url => url.match(speedrunMatcher) != null);
     try {
-        const randomComp = 1 - (config?.failChance ?? 0.4);
+        const failChance = config?.failChance ?? 0.4;
+
         while (page.url().match(speedrunMatcher) != null) {
             await page.waitForSelector(".js-question");
             const question = await page.$eval(".js-question", q => q.innerText);
             let answer = "...";
-            if (Math.random() > randomComp) {
+
+            if (Math.random() > failChance) {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 const { term, definition } = words.find(({ term, definition }) => question == term || question == definition)!;
                 answer = question == term ? definition : term;
             }
+
             await page.click(".js-answer");
             await page.type(".js-answer > div > div > div > input", answer, { delay: 50 });
             if (!(await page.$(".js-training-progress")) || !(await page.$(".js-next-button"))) break;
@@ -83,11 +86,12 @@ void (async () => {
         await page.evaluate(`alert("Error tijdens het speedrunnen: ${e}");`);
         console.error(e);
     }
+
     await wait(1000);
     await page.evaluate("alert(\"Speedrunnen klaar, screenshotten...\");");
 
     const screenshotDir = config?.screenshotDirectory ?? "screenshots";
-    const screenshotName = new Date().toISOString().replace(/[^a-z0-9]/gi, '_');
+    const screenshotName = new Date().toISOString().replace(/[^a-z0-9]/gi, "_");
     await mkdir(screenshotDir, { recursive: true });
     await page.screenshot({
         path: `${screenshotDir}/${screenshotName}.png`,

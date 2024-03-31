@@ -6,7 +6,9 @@
     "author": "Huizengek <25huizengek1@gmail.com>",
     "license": "GPL-3.0-or-later",
     "scripts": {
-        "start": "node src/build.mjs && node dist/index.js"
+        "start": "node src/build.mjs && node dist/index.js",
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix ."
     },
     "dependencies": {
         "ip": "^2.0.1",
