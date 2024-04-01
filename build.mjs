@@ -1,7 +1,10 @@
 import { build } from "esbuild";
 
+const name = "Build time";
+
 console.log("Starting esbuild");
-console.time("Build time");
+console.time(name);
+
 const result = await build({
     entryPoints: ["src/**/*.ts"],
     bundle: false,
@@ -13,5 +16,6 @@ const result = await build({
     minify: true,
     sourcemap: true
 });
-console.timeEnd("Build time");
+
+console.timeEnd(name);
 console.log(`Finished building with ${result.errors.length} errors and ${result.warnings.length} warnings\n`);

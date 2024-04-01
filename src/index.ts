@@ -2,9 +2,10 @@ import { Page } from "puppeteer";
 import puppeteer from "puppeteer-extra";
 import stealthPlugin from "puppeteer-extra-plugin-stealth";
 import { getConfig } from "./config";
-import { DISABLE_TIMEOUT } from "./constants";
+import { somOauth, timeouts } from "./constants";
 import { validatePairs } from "./validators";
 import { mkdir } from "fs/promises";
+import { checkHeadless } from "./headless";
 
 void (async () => {
     const config = await getConfig().catch(() => null);
@@ -18,13 +19,8 @@ void (async () => {
 
     const page = (await browser.pages())[0];
 
-    if (config?.shouldCheckHeadless) {
-        const headlessPage = await browser.newPage();
-        await headlessPage.goto("https://arh.antoinevastel.com/bots/areyouheadless");
-        await headlessPage.waitForNetworkIdle();
-        const success = headlessPage.$eval(".success", s => s.innerText == "You are not Chrome headless");
-        if (!success) throw new Error("It is not safe to proceed: we ARE Chrome in headless mode!");
-    }
+    if (config?.shouldCheckHeadless && !(await checkHeadless(browser)))
+        throw new Error("It is not safe to proceed: we ARE Chrome in headless mode!");
 
     await page.bringToFront();
     await page.goto("https://inloggen.learnbeat.nl/preauth/entreesomtoday");
@@ -35,15 +31,15 @@ void (async () => {
             return urlObj.hostname == "inloggen.somtoday.nl" && urlObj.searchParams.has("auth");
         };
         if (!matcher(page.url())) await waitForPage(page, matcher);
-        await page.type("#organisatieSearchField", config.schoolName, { delay: 50 });
+        await page.type(somOauth.ORG_SEARCH_FIELD_SELECTOR, config.schoolName, { delay: 50 });
         page.keyboard.press("Enter");
 
         await waitForPage(page, matcher);
-        await page.type("input[name='usernameFieldPanel:usernameFieldPanel_body:usernameField']", config.username, { delay: 50 });
+        await page.type(somOauth.USERNAME_FIELD_SELECTOR, config.username, { delay: 50 });
         page.keyboard.press("Enter");
 
-        await page.waitForSelector("input[name='passwordFieldPanel:passwordFieldPanel_body:passwordField']");
-        await page.type("input[name='passwordFieldPanel:passwordFieldPanel_body:passwordField']", config.password, { delay: 50 });
+        await page.waitForSelector(somOauth.PASSWORD_FIELD_SELECTOR);
+        await page.type(somOauth.PASSWORD_FIELD_SELECTOR, config.password, { delay: 50 });
         page.keyboard.press("Enter");
     }
 
@@ -83,26 +79,30 @@ void (async () => {
             await page.keyboard.press("Enter");
         }
     } catch (e) {
-        await page.evaluate(`alert("Error tijdens het speedrunnen: ${e}");`);
         console.error(e);
+        page.evaluate(`alert("Error tijdens het speedrunnen: ${e}");`);
     }
 
     await wait(1000);
-    await page.evaluate("alert(\"Speedrunnen klaar, screenshotten...\");");
+    page.evaluate("alert(\"Speedrunnen klaar, screenshotten...\");");
 
     const screenshotDir = config?.screenshotDirectory ?? "screenshots";
     const screenshotName = new Date().toISOString().replace(/[^a-z0-9]/gi, "_");
+    const screenshotPath = `${screenshotDir}/${screenshotName}.png`;
+
     await mkdir(screenshotDir, { recursive: true });
     await page.screenshot({
-        path: `${screenshotDir}/${screenshotName}.png`,
+        path: screenshotPath,
         type: "png"
     });
+
+    await page.evaluate(`alert("Screenshot gemaakt in ${screenshotPath}, klik om te sluiten.");`);
     await Promise.all((await browser.pages()).map(p => p.close()));
 })();
 
 async function waitForPage(page: Page, matcher: (url: string) => boolean) {
     for (; ;) {
-        await page.waitForNavigation({ waitUntil: "domcontentloaded", timeout: DISABLE_TIMEOUT });
+        await page.waitForNavigation({ waitUntil: "domcontentloaded", timeout: timeouts.DISABLE_TIMEOUT });
         if (matcher(page.url())) break;
     }
 }

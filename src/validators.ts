@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-export const wordValidator = z.tuple([z.string().min(1), z.string().min(1)])
+export const wordValidator = z
+    .tuple([z.string().min(1), z.string().min(1)])
     .transform(([term, definition]) => ({ term, definition }));
 
 export const wordsValidator = z.array(wordValidator);
