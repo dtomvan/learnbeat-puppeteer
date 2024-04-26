@@ -67,7 +67,6 @@ void (async () => {
             let answer = "...";
 
             if (Math.random() > failChance) {
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 const { term, definition } = words.find(({ term, definition }) => question == term || question == definition)!;
                 answer = question == term ? definition : term;
             }
