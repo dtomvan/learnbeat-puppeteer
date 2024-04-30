@@ -7,7 +7,7 @@
   "license": "GPL-3.0-or-later",
   "type": "module",
   "scripts": {
-    "start": "node build.mjs && node dist/index.js",
+    "start": "tsx src/index.ts",
     "lint": "eslint src/",
     "lint:fix": "eslint --fix src/"
   },
@@ -21,8 +21,8 @@
   "devDependencies": {
     "@eslint/js": "^9.1.1",
     "@types/node": "^20.12.5",
-    "esbuild": "^0.20.2",
     "eslint": "^9.1.1",
+    "tsx": "^4.7.3",
     "typescript": "^5.4.3",
     "typescript-eslint": "^7.7.1"
   }
