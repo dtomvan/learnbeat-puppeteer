@@ -1,6 +1,6 @@
 {
   "name": "learnbeat-puppeteer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Learnbeat speedrun bot 🇳🇱",
   "main": "src/index.ts",
   "author": "Huizengek <25huizengek1@gmail.com>",
