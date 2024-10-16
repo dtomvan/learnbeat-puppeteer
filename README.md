@@ -1,3 +1,9 @@
+## -- GEARCHIVEERD --
+
+Deze repo is gearchiveerd. Aangezien ik geen Learnbeat-account meer heb kan ik dit niet langer maintainen.
+
+Voel je vrij om de boel te forken.
+
 # learnbeat-puppeteer
 
 Learnbeat speedrun bot 🇳🇱
